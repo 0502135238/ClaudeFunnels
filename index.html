@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exclusive Offer</title>
+  <style>
+    /* Reset & Base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to right, #0f0c29, #302b63, #24243e);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .card {
+      background-color: #1a1a1a;
+      color: #fff;
+      border-radius: 14px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 20px 40px rgba(255, 215, 0, 0.3);
+      text-align: center;
+      animation: bounceIn 0.9s ease;
+      transition: all 0.3s ease;
+    }
+
+    @keyframes bounceIn {
+      0% { transform: scale(0.8); opacity: 0; }
+      60% { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(1); }
+    }
+
+    .card:hover {
+      box-shadow: 0 30px 60px rgba(255, 215, 0, 0.4);
+      transform: translateY(-5px);
+    }
+
+    .title {
+      font-size: 1.7rem;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+      color: #f5b91c;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 1rem;
+      margin-top: 1rem;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    input {
+      background-color: #2d2d2d;
+      color: #f9f9f9;
+      border: 1px solid #444;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #f5b91c;
+      box-shadow: 0 0 8px rgba(245, 185, 28, 0.5);
+    }
+
+    button {
+      background: linear-gradient(to right, #f5b91c, #e4af10);
+      color: #000;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #ffd700;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 1.5rem;
+      }
+      .title {
+        font-size: 1.4rem;
+      }
+      input, button {
+        padding: 0.8rem;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="title">🔥 Get the Elite Deal</div>
+    <form id="whatsappForm">
+      <input type="text" id="name" placeholder="Your Name" required />
+      <input type="tel" id="phone" placeholder="WhatsApp Number (+233...)" required />
+      <button type="submit">Unlock Offer</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("whatsappForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+
+      if (!name || !phone) {
+        alert("Please fill in both fields.");
+        return;
+      }
+
+      // Save data to SheetDB
+      fetch("https://sheetdb.io/api/v1/texberihus5na", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ data: [{ name, phone }] })
+      })
+      .then(res => res.json())
+      .then(() => {
+        console.log("Saved to SheetDB ✅");
+        const yourNumber = "233509296998";
+        const message = "Hi, I'm interested in your offer";
+        const whatsappURL = `https://wa.me/${yourNumber}?text=${encodeURIComponent(message)}`;
+        window.open(whatsappURL, "_blank");
+      })
+      .catch(err => {
+        console.error("Error saving to SheetDB ❌", err);
+        const yourNumber = "233509296998";
+        const message = "Hi, I'm interested in your offer";
+        const whatsappURL = `https://wa.me/${yourNumber}?text=${encodeURIComponent(message)}`;
+        window.open(whatsappURL, "_blank");
+      });
+    });
+  </script>
+</body>
+</html>
