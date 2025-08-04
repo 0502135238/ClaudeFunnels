@@ -111,40 +111,50 @@
     </form>
   </div>
 
-  <script>
-    document.getElementById("whatsappForm").addEventListener("submit", function (e) {
-      e.preventDefault();
+ <script>
+  document.getElementById("whatsappForm").addEventListener("submit", function (e) {
+    e.preventDefault();
 
-      const name = document.getElementById("name").value.trim();
-      const phone = document.getElementById("phone").value.trim();
+    const name = document.getElementById("name").value.trim();
+    const phone = document.getElementById("phone").value.trim();
 
-      if (!name || !phone) {
-        alert("Please fill in both fields.");
-        return;
-      }
+    if (!name || !phone) {
+      alert("Please fill in both fields.");
+      return;
+    }
 
-      // Save data to SheetDB
-      fetch("https://sheetdb.io/api/v1/texberihus5na", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data: [{ name, phone }] })
-      })
-      .then(res => res.json())
-      .then(() => {
-        console.log("Saved to SheetDB ✅");
-        const yourNumber = "233509296998";
-        const message = "Hi, I'm interested in your offer";
-        const whatsappURL = `https://wa.me/${yourNumber}?text=${encodeURIComponent(message)}`;
-        window.open(whatsappURL, "_blank");
-      })
-      .catch(err => {
-        console.error("Error saving to SheetDB ❌", err);
-        const yourNumber = "233509296998";
-        const message = "Hi, I'm interested in your offer";
-        const whatsappURL = `https://wa.me/${yourNumber}?text=${encodeURIComponent(message)}`;
-        window.open(whatsappURL, "_blank");
-      });
+    const yourNumber = "233509296998";
+    const message = "Hi, I'm interested in your offer";
+    const whatsappURL = `https://wa.me/${yourNumber}?text=${encodeURIComponent(message)}`;
+
+    // Save to SheetDB and show feedback
+    fetch("https://sheetdb.io/api/v1/texberihus5na", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ data: [{ name, phone }] })
+    })
+    .then(res => res.json())
+    .then(() => {
+      console.log("Saved to SheetDB ✅");
+
+      // Show confirmation message
+      const card = document.querySelector(".card");
+      card.innerHTML = `<h2 style="color:#f5b91c;">✅ Submitted!</h2><p>Redirecting to WhatsApp...</p>`;
+
+      // Redirect to WhatsApp after short delay
+      setTimeout(() => {
+        window.location.href = whatsappURL;
+      }, 1500);
+    })
+    .catch(err => {
+      console.error("Error saving to SheetDB ❌", err);
+      card.innerHTML = `<h2 style="color:#f5b91c;">⚠️ Submission Failed</h2><p>Redirecting anyway...</p>`;
+      setTimeout(() => {
+        window.location.href = whatsappURL;
+      }, 1500);
     });
-  </script>
+  });
+</script>
 </body>
+
 </html>
